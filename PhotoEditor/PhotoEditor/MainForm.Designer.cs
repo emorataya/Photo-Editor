@@ -28,23 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.mainFormListView = new System.Windows.Forms.ListView();
             this.SuspendLayout();
             // 
-            // listView1
+            // mainFormListView
             // 
-            this.listView1.Location = new System.Drawing.Point(22, 20);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(850, 786);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.mainFormListView.Location = new System.Drawing.Point(22, 20);
+            this.mainFormListView.Name = "mainFormListView";
+            this.mainFormListView.Size = new System.Drawing.Size(850, 786);
+            this.mainFormListView.TabIndex = 0;
+            this.mainFormListView.UseCompatibleStateImageBehavior = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1505, 828);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.mainFormListView);
             this.Name = "MainForm";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -53,6 +53,6 @@
 
         #endregion
 
-        private ListView listView1;
+        private ListView mainFormListView;
     }
 }
