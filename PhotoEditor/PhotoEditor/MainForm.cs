@@ -63,5 +63,11 @@ namespace PhotoEditor
             mainFormListView.View = View.List;
 
         }
+
+        private void mainFormListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var editPhotoForm = new EditPhotoForm();
+            editPhotoForm.ShowDialog();        
+        }
     }
 }

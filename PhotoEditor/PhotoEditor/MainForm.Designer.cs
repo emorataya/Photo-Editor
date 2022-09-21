@@ -33,20 +33,23 @@
             // 
             // mainFormListView
             // 
-            this.mainFormListView.Location = new System.Drawing.Point(22, 20);
+            this.mainFormListView.Location = new System.Drawing.Point(12, 9);
+            this.mainFormListView.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.mainFormListView.Name = "mainFormListView";
-            this.mainFormListView.Size = new System.Drawing.Size(850, 786);
+            this.mainFormListView.Size = new System.Drawing.Size(460, 371);
             this.mainFormListView.TabIndex = 0;
             this.mainFormListView.UseCompatibleStateImageBehavior = false;
+            this.mainFormListView.SelectedIndexChanged += new System.EventHandler(this.mainFormListView_SelectedIndexChanged);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1505, 828);
+            this.ClientSize = new System.Drawing.Size(483, 388);
             this.Controls.Add(this.mainFormListView);
+            this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "Photo Editor";
             this.ResumeLayout(false);
 
         }
