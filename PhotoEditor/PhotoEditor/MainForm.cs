@@ -67,7 +67,19 @@ namespace PhotoEditor
         private void mainFormListView_SelectedIndexChanged(object sender, EventArgs e)
         {
             var editPhotoForm = new EditPhotoForm();
-            editPhotoForm.ShowDialog();        
+            var selectedFile = photoRootDirectory + '\\' + mainFormListView.SelectedItems[0].Text;
+            editPhotoForm.photoPictureBox.Image = LoadImage(selectedFile);
+            editPhotoForm.ShowDialog();
         }
+
+        private Image LoadImage(string filename)
+        {
+            // Use this method to load images so the image files do not remain locked
+            byte[] bytes = File.ReadAllBytes(filename);
+            MemoryStream ms = new MemoryStream(bytes);
+            return Image.FromStream(ms);
+        }
+
+
     }
 }
