@@ -38,6 +38,7 @@
             this.photoPictureBox.Location = new System.Drawing.Point(12, 12);
             this.photoPictureBox.Name = "photoPictureBox";
             this.photoPictureBox.Size = new System.Drawing.Size(371, 350);
+            this.photoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.photoPictureBox.TabIndex = 0;
             this.photoPictureBox.TabStop = false;
             // 
