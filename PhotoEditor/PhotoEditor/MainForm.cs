@@ -10,10 +10,6 @@ namespace PhotoEditor
         {
             InitializeComponent();
 
-            //Part 1 - Due: Sept. 22
-            //1. ListView on the main form shows all JPEG filenames in the user's Pictures directory.
-            //   No photo is necessary, and no background thread is necessary to populate the list box
-
             //Need to get folder path - want to get pictures from the pictures folder
             photoRootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             PopulateImageList();
@@ -84,6 +80,44 @@ namespace PhotoEditor
             return Image.FromStream(ms);
         }
 
+        //Will need to change the view if we choose a different directory
+        public void RefreshTree()
+        {
+            //TreeView.Nodes.Clear();
+        }
 
+        //Menu Strip: File
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void selectRootFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //McCown notes
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            //Need dialog
+            DialogResult result = folderBrowserDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                photoRootDirectory = folderBrowserDialog.SelectedPath;
+                //Insert helper function for directory change
+
+            }
+        }
+
+        private void locateOnDiskToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // Menu strip: About 
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Pops up the dialog box
+            About about = new About();
+            about.ShowDialog();
+        }
     }
 }
