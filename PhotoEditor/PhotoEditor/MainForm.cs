@@ -21,27 +21,6 @@ namespace PhotoEditor
         {
             photoFiles = new List<FileInfo>();
 
-            //ListViewItem item1 = new ListViewItem("item1", 0);   // Text and image index
-            //item1.SubItems.Add("1");   // Column 2
-            //item1.SubItems.Add("2");   // Column 3
-            //item1.SubItems.Add("3");   // Column 4
-
-            //ListViewItem item2 = new ListViewItem("item2", 1);
-            //item2.SubItems.Add("4");
-            //item2.SubItems.Add("5");
-            //item2.SubItems.Add("6");
-
-            //ListViewItem item3 = new ListViewItem("item3", 2);
-            //item3.SubItems.Add("7");
-            //item3.SubItems.Add("8");
-            //item3.SubItems.Add("9");
-
-            //// Create columns (Width of -2 indicates auto-size)
-            //mainFormListView.Columns.Add("Column 1", -2, HorizontalAlignment.Left);
-            //mainFormListView.Columns.Add("Column 2", -2, HorizontalAlignment.Left);
-            //mainFormListView.Columns.Add("Column 3", 40, HorizontalAlignment.Right);
-            //mainFormListView.Columns.Add("Column 4", 40, HorizontalAlignment.Center);
-
             DirectoryInfo homeDir = new DirectoryInfo(photoRootDirectory);
             foreach (FileInfo file in homeDir.GetFiles("*.jpg"))
             {
@@ -50,13 +29,12 @@ namespace PhotoEditor
                 mainFormListView.Items.Add(temp);
             }
 
-            mainFormListView.Columns.Add("Column 1", -2, HorizontalAlignment.Left);
-            mainFormListView.Columns.Add("Column 2", -2, HorizontalAlignment.Left);
-            mainFormListView.Columns.Add("Column 3", -2, HorizontalAlignment.Left);
-            mainFormListView.Columns.Add("Column 4", -2, HorizontalAlignment.Left);
+            mainFormListView.Columns.Add("Name");
+            mainFormListView.Columns.Add("Date");
+            mainFormListView.Columns.Add("Size");
 
             // Show default view - put in a list for now
-            mainFormListView.View = View.List;
+            mainFormListView.View = View.Details;
 
         }
 
@@ -118,6 +96,29 @@ namespace PhotoEditor
             //Pops up the dialog box
             About about = new About();
             about.ShowDialog();
+        }
+
+        //Menu Strip: View - Details Tab
+        private void detailsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Want user to only check 1 thing at a time
+            detailsToolStripMenuItem.Checked = true;
+            smallToolStripMenuItem.Checked = false;
+            largeToolStripMenuItem.Checked = false;
+        }
+
+        private void smallToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            smallToolStripMenuItem.Checked = true;
+            detailsToolStripMenuItem.Checked = false;
+            largeToolStripMenuItem.Checked = false;
+        }
+
+        private void largeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            largeToolStripMenuItem.Checked = true;
+            detailsToolStripMenuItem.Checked = false;
+            largeToolStripMenuItem.Checked = false;
         }
     }
 }
