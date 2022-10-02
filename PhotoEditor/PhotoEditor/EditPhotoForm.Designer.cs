@@ -115,6 +115,7 @@
             this.brightnessTrackBar.Name = "brightnessTrackBar";
             this.brightnessTrackBar.Size = new System.Drawing.Size(147, 45);
             this.brightnessTrackBar.TabIndex = 3;
+            this.brightnessTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.brightnessTrackBar.Value = 50;
             this.brightnessTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.brightnessTrackBar_MouseUp);
             // 
@@ -158,6 +159,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.photoPictureBox);
             this.Name = "EditPhotoForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit Photo";
             ((System.ComponentModel.ISupportInitialize)(this.photoPictureBox)).EndInit();
             this.groupBox1.ResumeLayout(false);
