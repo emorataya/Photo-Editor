@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +14,13 @@ namespace PhotoEditor
 {
     public partial class EditPhotoForm : Form
     {
-        public EditPhotoForm()
+        private string photoPath;
+
+        public EditPhotoForm(string path)
         {
+            photoPath = path;
             InitializeComponent();
+            saveButton.Enabled = false;
         }
 
         private async void invertButton_Click(object sender, EventArgs e)
@@ -31,6 +36,7 @@ namespace PhotoEditor
             // This could take a long time... should be done in a thread
             await InvertColors(transformedBitmap, transformingForm);
 
+            saveButton.Enabled = true;
             transformingForm.Close();
 
             photoPictureBox.Image = transformedBitmap;
@@ -83,6 +89,7 @@ namespace PhotoEditor
                 // This could take a long time... should be done in a thread
                 await AlterColors(transformedBitmap, colorDialog1.Color, transformingForm);
 
+                saveButton.Enabled = true;
                 transformingForm.Close();
 
                 photoPictureBox.Image = transformedBitmap;
@@ -135,6 +142,7 @@ namespace PhotoEditor
 
             await ChangeBrightness(transformedBitmap, brightnessTrackBar.Value, transformingForm);
 
+            saveButton.Enabled = true;
             transformingForm.Close();
 
             photoPictureBox.Image = transformedBitmap;
@@ -173,6 +181,12 @@ namespace PhotoEditor
 
                 }
             });
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            photoPictureBox.Image.Save(photoPath, ImageFormat.Jpeg);
+            Close();
         }
     }
 }

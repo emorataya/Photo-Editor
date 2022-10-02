@@ -40,10 +40,10 @@ namespace PhotoEditor
 
         private void mainFormListView_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var editPhotoForm = new EditPhotoForm();
-
             if (mainFormListView.SelectedItems.Count == 0)
                 return;
+
+            var editPhotoForm = new EditPhotoForm(photoRootDirectory + '\\' + mainFormListView.SelectedItems[0].Text);
 
             var selectedFile = photoRootDirectory + '\\' + mainFormListView.SelectedItems[0].Text;
                 editPhotoForm.photoPictureBox.Image = LoadImage(selectedFile);
