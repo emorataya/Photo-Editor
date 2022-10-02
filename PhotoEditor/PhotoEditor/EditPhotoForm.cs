@@ -274,5 +274,19 @@ namespace PhotoEditor
             // Cancel the task
             cancellationTokenSource.Cancel();
         }
+
+        // Used code from https://www.c-sharpcorner.com/uploadfile/mahesh/savefiledialog-in-C-Sharp/
+        private void saveAsButton_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.InitialDirectory = photoPath;
+            saveFileDialog1.Filter = "Image Files|*.jpg";
+            saveFileDialog1.DefaultExt = "jpg";
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                photoPictureBox.Image.Save(saveFileDialog1.FileName);
+                Close();
+            }
+        }
     }
 }
