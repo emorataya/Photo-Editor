@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PhotoEditor
 {
@@ -51,7 +52,18 @@ namespace PhotoEditor
                         Color newColor = Color.FromArgb(newRed, newGreen, newBlue);
                         transformedBitmap.SetPixel(x, y, newColor);
                     }
-                    transformingForm.progressBar1.Value++;
+
+                    try
+                    {
+                        Invoke(() =>
+                        {
+                            transformingForm.progressBar1.Value++;
+                        });
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                        // The form was closed before the thread completed.  No big deal.
+                    }
                 }
             });
         }
@@ -94,7 +106,19 @@ namespace PhotoEditor
                         var newColor = Color.FromArgb(newRed, newGreen, newBlue);
                         transformedBitmap.SetPixel(x, y, newColor);
                     }
-                    transformingForm.progressBar1.Value++;
+
+                    try
+                    {
+                        Invoke(() =>
+                        {
+                            transformingForm.progressBar1.Value++;
+                        });
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                        // The form was closed before the thread completed.  No big deal.
+                    }
+
                 }
             });
         }
@@ -134,7 +158,19 @@ namespace PhotoEditor
                         var newColor = Color.FromArgb(newRed, newGreen, newBlue);
                         transformedBitmap.SetPixel(x, y, newColor);
                     }
-                    transformingForm.progressBar1.Value++;
+
+                    try
+                    {
+                        Invoke(() =>
+                        {
+                            transformingForm.progressBar1.Value++;
+                        });
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                        // The form was closed before the thread completed.  No big deal.
+                    }
+
                 }
             });
         }
