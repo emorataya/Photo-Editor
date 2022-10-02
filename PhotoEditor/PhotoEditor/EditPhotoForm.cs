@@ -23,13 +23,20 @@ namespace PhotoEditor
             transformingForm.Show();
 
             var transformedBitmap = new Bitmap(photoPictureBox.Image);
+
+            transformingForm.progressBar1.Minimum = 0;
+            transformingForm.progressBar1.Maximum = transformedBitmap.Height;
+
             // This could take a long time... should be done in a thread
-            await InvertColors(transformedBitmap);
+            await InvertColors(transformedBitmap, transformingForm);
+
+            transformingForm.Close();
+
             photoPictureBox.Image = transformedBitmap;
         }
 
         // Inverts each pixel
-        private async Task InvertColors(Bitmap transformedBitmap)
+        private async Task InvertColors(Bitmap transformedBitmap, TransformingForm transformingForm)
         {
             await Task.Run(() =>
             {
@@ -44,6 +51,7 @@ namespace PhotoEditor
                         Color newColor = Color.FromArgb(newRed, newGreen, newBlue);
                         transformedBitmap.SetPixel(x, y, newColor);
                     }
+                    transformingForm.progressBar1.Value++;
                 }
             });
         }
@@ -56,14 +64,20 @@ namespace PhotoEditor
             {
                 var transformingForm = new TransformingForm();
                 transformingForm.Show();
-                // This could take a long time... should be done in a thread
-                await AlterColors(transformedBitmap, colorDialog1.Color);
-            }
 
-            photoPictureBox.Image = transformedBitmap;
+                transformingForm.progressBar1.Minimum = 0;
+                transformingForm.progressBar1.Maximum = transformedBitmap.Height;
+
+                // This could take a long time... should be done in a thread
+                await AlterColors(transformedBitmap, colorDialog1.Color, transformingForm);
+
+                transformingForm.Close();
+
+                photoPictureBox.Image = transformedBitmap;
+            }
         }
 
-        private async Task AlterColors(Bitmap transformedBitmap, Color chosenColor)
+        private async Task AlterColors(Bitmap transformedBitmap, Color chosenColor, TransformingForm transformingForm)
         {
             await Task.Run(() =>
             {
@@ -80,7 +94,7 @@ namespace PhotoEditor
                         var newColor = Color.FromArgb(newRed, newGreen, newBlue);
                         transformedBitmap.SetPixel(x, y, newColor);
                     }
-
+                    transformingForm.progressBar1.Value++;
                 }
             });
         }
@@ -91,12 +105,19 @@ namespace PhotoEditor
             transformingForm.Show();
 
             var transformedBitmap = new Bitmap(photoPictureBox.Image);
-            await ChangeBrightness(transformedBitmap, brightnessTrackBar.Value);
+
+            transformingForm.progressBar1.Minimum = 0;
+            transformingForm.progressBar1.Maximum = transformedBitmap.Height;
+
+            await ChangeBrightness(transformedBitmap, brightnessTrackBar.Value, transformingForm);
+
+            transformingForm.Close();
+
             photoPictureBox.Image = transformedBitmap;
         }
 
         // brightness is a value between 0 – 100. Values < 50 makes the image darker, > 50 makes lighter
-        private async Task ChangeBrightness(Bitmap transformedBitmap, int brightness)
+        private async Task ChangeBrightness(Bitmap transformedBitmap, int brightness, TransformingForm transformingForm)
         {
             await Task.Run(() =>
             {
@@ -113,6 +134,7 @@ namespace PhotoEditor
                         var newColor = Color.FromArgb(newRed, newGreen, newBlue);
                         transformedBitmap.SetPixel(x, y, newColor);
                     }
+                    transformingForm.progressBar1.Value++;
                 }
             });
         }
