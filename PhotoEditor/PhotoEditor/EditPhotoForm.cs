@@ -19,11 +19,12 @@ namespace PhotoEditor
 
         private async void invertButton_Click(object sender, EventArgs e)
         {
-            var transformedBitmap = new Bitmap(photoPictureBox.Image);
+            var transformingForm = new TransformingForm();
+            transformingForm.Show();
 
+            var transformedBitmap = new Bitmap(photoPictureBox.Image);
             // This could take a long time... should be done in a thread
             await InvertColors(transformedBitmap);
-
             photoPictureBox.Image = transformedBitmap;
         }
 
@@ -49,12 +50,15 @@ namespace PhotoEditor
 
         private async void colorButton_Click(object sender, EventArgs e)
         {
-            colorDialog1.ShowDialog();
-
             var transformedBitmap = new Bitmap(photoPictureBox.Image);
 
-            // This could take a long time... should be done in a thread
-            await AlterColors(transformedBitmap, colorDialog1.Color);
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                var transformingForm = new TransformingForm();
+                transformingForm.Show();
+                // This could take a long time... should be done in a thread
+                await AlterColors(transformedBitmap, colorDialog1.Color);
+            }
 
             photoPictureBox.Image = transformedBitmap;
         }
@@ -76,16 +80,18 @@ namespace PhotoEditor
                         var newColor = Color.FromArgb(newRed, newGreen, newBlue);
                         transformedBitmap.SetPixel(x, y, newColor);
                     }
+
                 }
             });
         }
 
         private async void brightnessTrackBar_MouseUp(object sender, MouseEventArgs e)
         {
+            var transformingForm = new TransformingForm();
+            transformingForm.Show();
+
             var transformedBitmap = new Bitmap(photoPictureBox.Image);
-
             await ChangeBrightness(transformedBitmap, brightnessTrackBar.Value);
-
             photoPictureBox.Image = transformedBitmap;
         }
 
