@@ -14,7 +14,9 @@ namespace PhotoEditor
 {
     public partial class EditPhotoForm : Form
     {
+        private bool isCancelled = false;
         private string photoPath;
+        private CancellationTokenSource cancellationTokenSource;
 
         public EditPhotoForm(string path)
         {
@@ -27,6 +29,7 @@ namespace PhotoEditor
         {
             var transformingForm = new TransformingForm();
             transformingForm.Show();
+            transformingForm.FormClosed += TransformingForm_FormClosed;
 
             var transformedBitmap = new Bitmap(photoPictureBox.Image);
 
@@ -37,17 +40,23 @@ namespace PhotoEditor
             // This could take a long time... should be done in a thread
             await InvertColors(transformedBitmap, transformingForm);
             this.Enabled = true;
-
+            this.BringToFront();
 
             saveButton.Enabled = true;
             transformingForm.Close();
 
-            photoPictureBox.Image = transformedBitmap;
+            if (!isCancelled)
+            {
+                photoPictureBox.Image = transformedBitmap;
+            }
         }
 
         // Inverts each pixel
         private async Task InvertColors(Bitmap transformedBitmap, TransformingForm transformingForm)
         {
+            cancellationTokenSource = new CancellationTokenSource();
+            var token = cancellationTokenSource.Token;
+
             await Task.Run(() =>
             {
                 for (int y = 0; y < transformedBitmap.Height; y++)
@@ -60,6 +69,17 @@ namespace PhotoEditor
                         int newBlue = Math.Abs(color.B - 255);
                         Color newColor = Color.FromArgb(newRed, newGreen, newBlue);
                         transformedBitmap.SetPixel(x, y, newColor);
+
+                        // Leave the loop if the operation has been cancelled
+                        if (token.IsCancellationRequested)
+                            break;
+                    }
+
+                    // Leave the loop if the operation has been cancelled
+                    if (token.IsCancellationRequested)
+                    {
+                        isCancelled = true;
+                        break;
                     }
 
                     try
@@ -74,7 +94,10 @@ namespace PhotoEditor
                         // The form was closed before the thread completed.  No big deal.
                     }
                 }
-            });
+            }, token);
+
+            if (!token.IsCancellationRequested)
+                isCancelled = false;
         }
 
         private async void colorButton_Click(object sender, EventArgs e)
@@ -85,6 +108,7 @@ namespace PhotoEditor
             {
                 var transformingForm = new TransformingForm();
                 transformingForm.Show();
+                transformingForm.FormClosed += TransformingForm_FormClosed;
 
                 transformingForm.progressBar1.Minimum = 0;
                 transformingForm.progressBar1.Maximum = transformedBitmap.Height;
@@ -93,16 +117,23 @@ namespace PhotoEditor
                 // This could take a long time... should be done in a thread
                 await AlterColors(transformedBitmap, colorDialog1.Color, transformingForm);
                 this.Enabled = true;
+                this.BringToFront();
 
                 saveButton.Enabled = true;
                 transformingForm.Close();
 
-                photoPictureBox.Image = transformedBitmap;
+                if (!isCancelled)
+                {
+                    photoPictureBox.Image = transformedBitmap;
+                }
             }
         }
 
         private async Task AlterColors(Bitmap transformedBitmap, Color chosenColor, TransformingForm transformingForm)
         {
+            cancellationTokenSource = new CancellationTokenSource();
+            var token = cancellationTokenSource.Token; 
+
             await Task.Run(() =>
             {
                 for (int y = 0; y < transformedBitmap.Height; y++)
@@ -117,6 +148,17 @@ namespace PhotoEditor
                         int newBlue = Convert.ToInt32(chosenColor.B * percent);
                         var newColor = Color.FromArgb(newRed, newGreen, newBlue);
                         transformedBitmap.SetPixel(x, y, newColor);
+
+                        // Leave the loop if the operation has been cancelled
+                        if (token.IsCancellationRequested)
+                            break;
+                    }
+
+                    // Leave the loop if the operation has been cancelled
+                    if (token.IsCancellationRequested)
+                    {
+                        isCancelled = true;
+                        break;
                     }
 
                     try
@@ -132,13 +174,17 @@ namespace PhotoEditor
                     }
 
                 }
-            });
+            }, token);
+
+            if (!token.IsCancellationRequested)
+                isCancelled = false;
         }
 
         private async void brightnessTrackBar_MouseUp(object sender, MouseEventArgs e)
         {
             var transformingForm = new TransformingForm();
             transformingForm.Show();
+            transformingForm.FormClosed += TransformingForm_FormClosed;
 
             var transformedBitmap = new Bitmap(photoPictureBox.Image);
 
@@ -148,16 +194,23 @@ namespace PhotoEditor
             this.Enabled = false;
             await ChangeBrightness(transformedBitmap, brightnessTrackBar.Value, transformingForm);
             this.Enabled = true;
+            this.BringToFront();
 
             saveButton.Enabled = true;
             transformingForm.Close();
 
-            photoPictureBox.Image = transformedBitmap;
+            if (!isCancelled)
+            {
+                photoPictureBox.Image = transformedBitmap;
+            }
         }
 
         // brightness is a value between 0 – 100. Values < 50 makes the image darker, > 50 makes lighter
         private async Task ChangeBrightness(Bitmap transformedBitmap, int brightness, TransformingForm transformingForm)
         {
+            cancellationTokenSource = new CancellationTokenSource();
+            var token = cancellationTokenSource.Token;
+
             await Task.Run(() =>
             {
                 // Calculate amount to change RGB
@@ -172,6 +225,17 @@ namespace PhotoEditor
                         int newBlue = Math.Max(0, Math.Min(color.B - amount, 255));
                         var newColor = Color.FromArgb(newRed, newGreen, newBlue);
                         transformedBitmap.SetPixel(x, y, newColor);
+
+                        // Leave the loop if the operation has been cancelled
+                        if (token.IsCancellationRequested)
+                            break;
+                    }
+
+                    // Leave the loop if the operation has been cancelled
+                    if (token.IsCancellationRequested)
+                    {
+                        isCancelled = true;
+                        break;
                     }
 
                     try
@@ -187,7 +251,10 @@ namespace PhotoEditor
                     }
 
                 }
-            });
+            }, token);
+
+            if (!token.IsCancellationRequested)
+                isCancelled = false;
         }
 
         private void saveButton_Click(object sender, EventArgs e)
@@ -199,6 +266,13 @@ namespace PhotoEditor
         private void cancelButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void TransformingForm_FormClosed()
+        {
+            // The transformation of image was cancelled
+            // Cancel the task
+            cancellationTokenSource.Cancel();
         }
     }
 }

@@ -40,14 +40,7 @@ namespace PhotoEditor
 
         private void mainFormListView_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (mainFormListView.SelectedItems.Count == 0)
-                return;
 
-            var editPhotoForm = new EditPhotoForm(photoRootDirectory + '\\' + mainFormListView.SelectedItems[0].Text);
-
-            var selectedFile = photoRootDirectory + '\\' + mainFormListView.SelectedItems[0].Text;
-                editPhotoForm.photoPictureBox.Image = LoadImage(selectedFile);
-                editPhotoForm.ShowDialog();
         }
 
         private Image LoadImage(string filename)
@@ -119,6 +112,20 @@ namespace PhotoEditor
             largeToolStripMenuItem.Checked = true;
             detailsToolStripMenuItem.Checked = false;
             largeToolStripMenuItem.Checked = false;
+        }
+
+        //The Edit Photo Form has to activate when theres a double click on the image,
+        //Before it was in SelectedIndexChanged
+        private void mainFormListView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (mainFormListView.SelectedItems.Count == 0)
+                return;
+
+            var editPhotoForm = new EditPhotoForm(photoRootDirectory + '\\' + mainFormListView.SelectedItems[0].Text);
+
+            var selectedFile = photoRootDirectory + '\\' + mainFormListView.SelectedItems[0].Text;
+            editPhotoForm.photoPictureBox.Image = LoadImage(selectedFile);
+            editPhotoForm.ShowDialog();
         }
     }
 }
