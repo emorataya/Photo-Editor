@@ -1,3 +1,5 @@
+using System.Windows.Forms.Design;
+
 namespace PhotoEditor
 {
     public partial class MainForm : Form
@@ -114,8 +116,9 @@ namespace PhotoEditor
             largeToolStripMenuItem.Checked = false;
         }
 
-        //The Edit Photo Form has to activate when theres a double click on the image,
-        //Before it was in SelectedIndexChanged
+        // The EditPhotoForm has to activeate when there is a double click on the image,
+        // We had it in a way where it activated when there was one click (SelectedIndexChanged)
+        // But SelectedIndexChanged should do something different
         private void mainFormListView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (mainFormListView.SelectedItems.Count == 0)
