@@ -33,8 +33,11 @@ namespace PhotoEditor
             transformingForm.progressBar1.Minimum = 0;
             transformingForm.progressBar1.Maximum = transformedBitmap.Height;
 
+            this.Enabled = false;
             // This could take a long time... should be done in a thread
             await InvertColors(transformedBitmap, transformingForm);
+            this.Enabled = true;
+
 
             saveButton.Enabled = true;
             transformingForm.Close();
@@ -86,8 +89,10 @@ namespace PhotoEditor
                 transformingForm.progressBar1.Minimum = 0;
                 transformingForm.progressBar1.Maximum = transformedBitmap.Height;
 
+                this.Enabled = false;
                 // This could take a long time... should be done in a thread
                 await AlterColors(transformedBitmap, colorDialog1.Color, transformingForm);
+                this.Enabled = true;
 
                 saveButton.Enabled = true;
                 transformingForm.Close();
@@ -140,7 +145,9 @@ namespace PhotoEditor
             transformingForm.progressBar1.Minimum = 0;
             transformingForm.progressBar1.Maximum = transformedBitmap.Height;
 
+            this.Enabled = false;
             await ChangeBrightness(transformedBitmap, brightnessTrackBar.Value, transformingForm);
+            this.Enabled = true;
 
             saveButton.Enabled = true;
             transformingForm.Close();
@@ -186,6 +193,11 @@ namespace PhotoEditor
         private void saveButton_Click(object sender, EventArgs e)
         {
             photoPictureBox.Image.Save(photoPath, ImageFormat.Jpeg);
+            Close();
+        }
+
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
             Close();
         }
     }
