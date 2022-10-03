@@ -18,23 +18,48 @@ namespace PhotoEditor
             InitializeComponent();
 
             //Need to get folder path - want to get pictures from the pictures folder
+            directory = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
             photoRootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             //Writing to the console, not the gui app
             Console.WriteLine(photoRootDirectory);
+
+            //ListView
             PopulateImageList();
 
-            //Testing to see if it will work here
-            mainFormListView.Columns.Add("Name", -2);
-            mainFormListView.Columns.Add("Date", -2);
-            mainFormListView.Columns.Add("Size", -2);
+            //TreeView
+            PopulateTreeView();
 
+            //Testing to see if it will work here
+            mainFormListView.Columns.Add("Name", -2, HorizontalAlignment.Left);
+            mainFormListView.Columns.Add("Date", -2, HorizontalAlignment.Left);
+            mainFormListView.Columns.Add("Size", -2, HorizontalAlignment.Left);
+
+        }
+
+        private void PopulateTreeView()
+        {
+            //For future use
+            treeView1.Nodes.Clear();
+            ListTreeDir(treeView1, directory.FullName);
         }
 
         //Listing the tree view directory
         private void ListTreeDir(TreeView treeView, string path)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(path);
+            treeView1.Nodes.Add(CreateTreeNode(directoryInfo));
+        }
 
+        private static TreeNode CreateTreeNode(DirectoryInfo directoryInfo)
+        {
+            TreeNode dirNode = new TreeNode(directoryInfo.Name);
+            foreach (var directory in directoryInfo.GetDirectories())
+            {
+                dirNode.Nodes.Add(CreateTreeNode(directory));
+            }
+
+            dirNode.Tag = directoryInfo;
+            return dirNode;
         }
 
         //PhotoRootDirectory is a string - need to change it
@@ -78,14 +103,15 @@ namespace PhotoEditor
                         return;
                     }
 
-                    //Thread
-                   
+                //Thread
                     byte[] bytes = System.IO.File.ReadAllBytes(file.FullName);
                     Image image = Image.FromStream(new MemoryStream(bytes));
+               // Image image = LoadImage(photoRootDirectory);
 
                     smallImageList.Images.Add(file.FullName, image);
                     largeImageList.Images.Add(file.FullName, image);
 
+                    //Subitems using temp view listViewItem variable
                     ListViewItem listViewItem = new ListViewItem
                     {
                         ImageKey = file.FullName,
