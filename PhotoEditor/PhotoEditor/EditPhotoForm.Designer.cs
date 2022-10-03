@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditPhotoForm));
             this.photoPictureBox = new System.Windows.Forms.PictureBox();
             this.invertButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -174,6 +175,7 @@
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.photoPictureBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "EditPhotoForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit Photo";
