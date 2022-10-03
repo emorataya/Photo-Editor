@@ -43,6 +43,7 @@ namespace PhotoEditor
         {
             //For future use
             treeView1.Nodes.Clear();
+            treeView1.ImageList = imageList1;
             ListTreeDir(treeView1, directory.FullName);
         }
 
@@ -50,6 +51,8 @@ namespace PhotoEditor
         private void ListTreeDir(TreeView treeView, string path)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(path);
+            treeView1.ImageList = imageList1;
+
             treeView1.Nodes.Add(CreateTreeNode(directoryInfo));
         }
 
@@ -193,7 +196,7 @@ namespace PhotoEditor
             if (mainFormListView.SelectedItems.Count == 1)
             {
                 string fileTemp = mainFormListView.SelectedItems[0].ToString();
-                Process.Start("explorer.exe", fileTemp);
+                Process.Start("explorer.exe", @fileTemp);
             }
             else if (mainFormListView.SelectedItems.Count < 1)
             {
