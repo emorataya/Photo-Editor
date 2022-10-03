@@ -19,6 +19,8 @@ namespace PhotoEditor
 
             //Need to get folder path - want to get pictures from the pictures folder
             directory = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
+
+
             photoRootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             //Writing to the console, not the gui app
             Console.WriteLine(photoRootDirectory);
@@ -63,7 +65,7 @@ namespace PhotoEditor
         }
 
         //PhotoRootDirectory is a string - need to change it
-        public void UpdateDirectory(string photoRootDirectory)
+        public void UpdateDirectory(DirectoryInfo directory)
         {
             cancellationTokenSource.Cancel();
             //Might need to change it to DirectoryInfo
@@ -161,9 +163,9 @@ namespace PhotoEditor
 
             if (result == DialogResult.OK)
             {
-                photoRootDirectory = folderBrowserDialog.SelectedPath;
+                directory = new DirectoryInfo(folderBrowserDialog.SelectedPath);
                 //Insert helper function for directory change
-                UpdateDirectory(photoRootDirectory);
+                UpdateDirectory(directory);
                 //Acting like a "refresh" function - will just repopulate the tree view
                 PopulateImageList();
             }
@@ -189,6 +191,7 @@ namespace PhotoEditor
         //Menu Strip: View - Details Tab
         private void detailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            mainFormListView.View = View.Details;
             //Want user to only check 1 thing at a time
             detailsToolStripMenuItem.Checked = true;
             smallToolStripMenuItem.Checked = false;
@@ -197,6 +200,7 @@ namespace PhotoEditor
 
         private void smallToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            mainFormListView.View = View.SmallIcon;
             smallToolStripMenuItem.Checked = true;
             detailsToolStripMenuItem.Checked = false;
             largeToolStripMenuItem.Checked = false;
@@ -204,6 +208,7 @@ namespace PhotoEditor
 
         private void largeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            mainFormListView.View = View.LargeIcon;
             largeToolStripMenuItem.Checked = true;
             detailsToolStripMenuItem.Checked = false;
             largeToolStripMenuItem.Checked = false;
