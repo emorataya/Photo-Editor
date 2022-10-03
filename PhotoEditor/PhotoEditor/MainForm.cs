@@ -11,7 +11,6 @@ namespace PhotoEditor
         //Global variables that will be used throughout the project
         private string photoRootDirectory;
         DirectoryInfo directory;
-        private List<FileInfo> photoFiles;
         private CancellationTokenSource cancellationTokenSource;
 
         public MainForm()
@@ -22,9 +21,6 @@ namespace PhotoEditor
             directory = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
 
             photoRootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-
-            //Writing to the console, not the gui app
-            Console.WriteLine(photoRootDirectory);
 
             //ListView
             PopulateImageList();
@@ -78,7 +74,6 @@ namespace PhotoEditor
         //Populate Image List() - LIST VIEW
         private /*async Task*/ void PopulateImageList()
         {
-            photoFiles = new List<FileInfo>();
             cancellationTokenSource = new CancellationTokenSource();
             var token = cancellationTokenSource.Token;
 
@@ -189,14 +184,17 @@ namespace PhotoEditor
             }
         }
 
-        //Referenced https://www.codeproject.com/Questions/852563/How-to-open-file-explorer-at-given-location-in-csh
+        //Referenced https://social.msdn.microsoft.com/Forums/expression/en-US/0ea2edea-9a98-4c7a-8d7c-cf2ee56f4a79/open-folder-and-select-the-file?forum=winforms
         private void locateOnDiskToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //Need to make sure the user actually clicks on a picture first
             if (mainFormListView.SelectedItems.Count == 1)
             {
-                string fileTemp = mainFormListView.SelectedItems[0].ToString();
-                Process.Start("explorer.exe", @fileTemp);
+                string fileTemp = mainFormListView.SelectedItems[0].ImageKey;
+
+                ProcessStartInfo processStartInfo = new ProcessStartInfo(fileTemp);
+                Process.Start("explorer.exe", @"/select," + fileTemp);
+
             }
             else if (mainFormListView.SelectedItems.Count < 1)
             {
