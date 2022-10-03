@@ -73,7 +73,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "TransformingForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Transforming";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TransformingForm_FormClosing);
             this.ResumeLayout(false);

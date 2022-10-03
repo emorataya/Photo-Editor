@@ -36,7 +36,7 @@ namespace PhotoEditor
             mainFormListView.Columns.Add("Name", 300, HorizontalAlignment.Left);
             mainFormListView.Columns.Add("Date", -2, HorizontalAlignment.Left);
             mainFormListView.Columns.Add("Size", -2, HorizontalAlignment.Left);
-
+            mainFormListView.FullRowSelect = true;
         }
 
         private void PopulateTreeView()
