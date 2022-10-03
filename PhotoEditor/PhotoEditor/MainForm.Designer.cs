@@ -45,7 +45,12 @@
             this.mainFormListView = new System.Windows.Forms.ListView();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -57,7 +62,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1067, 40);
+            this.menuStrip1.Size = new System.Drawing.Size(1069, 40);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -152,21 +157,19 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.statusStrip1.Location = new System.Drawing.Point(0, 805);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1067, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1069, 22);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // mainFormListView
             // 
             this.mainFormListView.Activation = System.Windows.Forms.ItemActivation.TwoClick;
-            this.mainFormListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.mainFormListView.Location = new System.Drawing.Point(366, 42);
+            this.mainFormListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainFormListView.Location = new System.Drawing.Point(0, 0);
             this.mainFormListView.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.mainFormListView.MultiSelect = false;
             this.mainFormListView.Name = "mainFormListView";
-            this.mainFormListView.Size = new System.Drawing.Size(688, 761);
+            this.mainFormListView.Size = new System.Drawing.Size(709, 759);
             this.mainFormListView.TabIndex = 0;
             this.mainFormListView.UseCompatibleStateImageBehavior = false;
             this.mainFormListView.SelectedIndexChanged += new System.EventHandler(this.mainFormListView_SelectedIndexChanged);
@@ -174,12 +177,11 @@
             // 
             // treeView1
             // 
-            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.treeView1.Location = new System.Drawing.Point(13, 42);
+            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(345, 761);
+            this.treeView1.Size = new System.Drawing.Size(356, 759);
             this.treeView1.TabIndex = 1;
             // 
             // imageList1
@@ -188,13 +190,28 @@
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Location = new System.Drawing.Point(0, 43);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.treeView1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.mainFormListView);
+            this.splitContainer1.Size = new System.Drawing.Size(1069, 759);
+            this.splitContainer1.SplitterDistance = 356;
+            this.splitContainer1.TabIndex = 4;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1067, 827);
-            this.Controls.Add(this.treeView1);
-            this.Controls.Add(this.mainFormListView);
+            this.ClientSize = new System.Drawing.Size(1069, 827);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -203,6 +220,10 @@
             this.Text = "Photo Editor";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -225,5 +246,6 @@
         private ListView mainFormListView;
         private TreeView treeView1;
         private ImageList imageList1;
+        private SplitContainer splitContainer1;
     }
 }
