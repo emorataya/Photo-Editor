@@ -14,8 +14,8 @@ Sydney Honyouti:
 Edwin Morataya:
 1. Edit window to transform the image (code to transform images, etc.).
 2. Transformation progress dialog box.
-3. Extra credit 2: Add folder icons to all the folders in the tree view.
-4. Extra credit 3: “Save As...” button.
+3. Extra credit 2: Add folder icons to all the folders in the tree view. (Resource: https://www.youtube.com/watch?v=zmNDez5WNPI)
+4. Extra credit 3: “Save As...” button. (Resource: https://www.c-sharpcorner.com/uploadfile/mahesh/savefiledialog-in-C-Sharp/)
 
 # Percentage of work performed by each teammate:
 Sydney Honyouti: 50%
