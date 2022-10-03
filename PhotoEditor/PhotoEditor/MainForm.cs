@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
 using System.Threading;
 using System.Windows.Forms;
@@ -17,11 +18,11 @@ namespace PhotoEditor
         {
             InitializeComponent();
 
-            //Need to get folder path - want to get pictures from the pictures folder
+            //Get folder path
             directory = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
 
-
             photoRootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+
             //Writing to the console, not the gui app
             Console.WriteLine(photoRootDirectory);
 
@@ -31,8 +32,8 @@ namespace PhotoEditor
             //TreeView
             PopulateTreeView();
 
-            //Testing to see if it will work here
-            mainFormListView.Columns.Add("Name", -2, HorizontalAlignment.Left);
+            //Adding columns to the image list view
+            mainFormListView.Columns.Add("Name", 300, HorizontalAlignment.Left);
             mainFormListView.Columns.Add("Date", -2, HorizontalAlignment.Left);
             mainFormListView.Columns.Add("Size", -2, HorizontalAlignment.Left);
 
@@ -68,9 +69,7 @@ namespace PhotoEditor
         public void UpdateDirectory(DirectoryInfo directory)
         {
             cancellationTokenSource.Cancel();
-            //Might need to change it to DirectoryInfo
-          //  photoRootDirectory = Environment.GetFolderPath(photoRootDirectory);
-            
+            PopulateImageList();
         }
 
         //Populate Image List() - LIST VIEW
@@ -80,7 +79,7 @@ namespace PhotoEditor
             cancellationTokenSource = new CancellationTokenSource();
             var token = cancellationTokenSource.Token;
 
-            DirectoryInfo homeDir = new DirectoryInfo(photoRootDirectory);
+            mainFormListView.Items.Clear();
 
             //Thread
             //await Task.Run(() =>
@@ -97,7 +96,7 @@ namespace PhotoEditor
                 mainFormListView.SmallImageList = smallImageList;
                 mainFormListView.LargeImageList = largeImageList;              
 
-                foreach (FileInfo file in homeDir.GetFiles("*.jpg"))
+                foreach (FileInfo file in directory.GetFiles("*.jpg"))
                 {
                     //Need to make sure to stop the thread if the cancellation has been requested
                     if (token.IsCancellationRequested)
@@ -108,12 +107,11 @@ namespace PhotoEditor
                 //Thread
                     byte[] bytes = System.IO.File.ReadAllBytes(file.FullName);
                     Image image = Image.FromStream(new MemoryStream(bytes));
-               // Image image = LoadImage(photoRootDirectory);
 
                     smallImageList.Images.Add(file.FullName, image);
                     largeImageList.Images.Add(file.FullName, image);
 
-                    //Subitems using temp view listViewItem variable
+                    //Subitems using temp listViewItem variable
                     ListViewItem listViewItem = new ListViewItem
                     {
                         ImageKey = file.FullName,
@@ -122,17 +120,33 @@ namespace PhotoEditor
                     };
 
                     listViewItem.SubItems.Add(file.LastWriteTime.ToString());
+
+                    var tempFileSize = FileSize(file);
+
+                    listViewItem.SubItems.Add(tempFileSize);
                     listViewItem.Tag = file;
 
                     mainFormListView.Items.Add(listViewItem);
 
-
-            }
+                }
 
                 // Show default view
                 mainFormListView.View = View.Details;
             //});
             
+        }
+
+        private string FileSize(FileInfo file)
+        {
+            string temp;
+            if (file.Length >= 1024)
+            {
+                return temp = file.Length / 1024 + " KB";
+            }
+            else
+            {
+                return temp = file.Length + " MB";
+            }
         }
 
         private void mainFormListView_SelectedIndexChanged(object sender, EventArgs e)
@@ -166,17 +180,24 @@ namespace PhotoEditor
                 directory = new DirectoryInfo(folderBrowserDialog.SelectedPath);
                 //Insert helper function for directory change
                 UpdateDirectory(directory);
-                //Acting like a "refresh" function - will just repopulate the tree view
+                //Acting like a "refresh" function - will just repopulate the image list view
                 PopulateImageList();
+                PopulateTreeView();
             }
         }
 
+        //Referenced https://www.codeproject.com/Questions/852563/How-to-open-file-explorer-at-given-location-in-csh
         private void locateOnDiskToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //Need to make sure the user actually clicks on a picture first
-            if (mainFormListView.SelectedItems != null)
+            if (mainFormListView.SelectedItems.Count == 1)
             {
-
+                string fileTemp = mainFormListView.SelectedItems[0].ToString();
+                Process.Start("explorer.exe", fileTemp);
+            }
+            else if (mainFormListView.SelectedItems.Count < 1)
+            {
+                MessageBox.Show("Select a image first before clicking 'Select Root Folder'", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -219,6 +240,8 @@ namespace PhotoEditor
         // But SelectedIndexChanged should do something different
         private void mainFormListView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            photoRootDirectory = directory.ToString();
+
             if (mainFormListView.SelectedItems.Count == 0)
                 return;
 
@@ -228,5 +251,7 @@ namespace PhotoEditor
             editPhotoForm.photoPictureBox.Image = LoadImage(selectedFile);
             editPhotoForm.ShowDialog();
         }
+
+
     }
 }
