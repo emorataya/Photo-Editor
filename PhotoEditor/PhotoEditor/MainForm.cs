@@ -1,12 +1,17 @@
+using System.DirectoryServices.ActiveDirectory;
+using System.Threading;
+using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
 namespace PhotoEditor
 {
     public partial class MainForm : Form
     {
-        //This is the variable that is going to be used for the photo root directory
+        //Global variables that will be used throughout the project
         private string photoRootDirectory;
+        DirectoryInfo directory;
         private List<FileInfo> photoFiles;
+        private CancellationTokenSource cancellationTokenSource;
 
         public MainForm()
         {
@@ -14,30 +19,92 @@ namespace PhotoEditor
 
             //Need to get folder path - want to get pictures from the pictures folder
             photoRootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+            //Writing to the console, not the gui app
+            Console.WriteLine(photoRootDirectory);
             PopulateImageList();
+
+            //Testing to see if it will work here
+            mainFormListView.Columns.Add("Name", -2);
+            mainFormListView.Columns.Add("Date", -2);
+            mainFormListView.Columns.Add("Size", -2);
 
         }
 
-        //Populate Image List()
-        private void PopulateImageList()
+        //Listing the tree view directory
+        private void ListTreeDir(TreeView treeView, string path)
+        {
+            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+
+        }
+
+        //PhotoRootDirectory is a string - need to change it
+        public void UpdateDirectory(string photoRootDirectory)
+        {
+            cancellationTokenSource.Cancel();
+            //Might need to change it to DirectoryInfo
+          //  photoRootDirectory = Environment.GetFolderPath(photoRootDirectory);
+            
+        }
+
+        //Populate Image List() - LIST VIEW
+        private /*async Task*/ void PopulateImageList()
         {
             photoFiles = new List<FileInfo>();
+            cancellationTokenSource = new CancellationTokenSource();
+            var token = cancellationTokenSource.Token;
 
             DirectoryInfo homeDir = new DirectoryInfo(photoRootDirectory);
-            foreach (FileInfo file in homeDir.GetFiles("*.jpg"))
-            {
-                //photoFiles.Add(file);
-                var temp = file.Name;
-                mainFormListView.Items.Add(temp);
+
+            //Thread
+            //await Task.Run(() =>
+            //{
+                //Images - Small
+                ImageList smallImageList = new ImageList();
+                smallImageList.ImageSize = new Size(64, 64);
+
+                //Images - Large
+                ImageList largeImageList = new ImageList();
+                largeImageList.ImageSize = new Size(128, 128);
+
+                //Invoke - used for progress bar
+                mainFormListView.SmallImageList = smallImageList;
+                mainFormListView.LargeImageList = largeImageList;              
+
+                foreach (FileInfo file in homeDir.GetFiles("*.jpg"))
+                {
+                    //Need to make sure to stop the thread if the cancellation has been requested
+                    if (token.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    //Thread
+                   
+                    byte[] bytes = System.IO.File.ReadAllBytes(file.FullName);
+                    Image image = Image.FromStream(new MemoryStream(bytes));
+
+                    smallImageList.Images.Add(file.FullName, image);
+                    largeImageList.Images.Add(file.FullName, image);
+
+                    ListViewItem listViewItem = new ListViewItem
+                    {
+                        ImageKey = file.FullName,
+                        Name = file.Name,
+                        Text = file.Name
+                    };
+
+                    listViewItem.SubItems.Add(file.LastWriteTime.ToString());
+                    listViewItem.Tag = file;
+
+                    mainFormListView.Items.Add(listViewItem);
+
+
             }
 
-            mainFormListView.Columns.Add("Name");
-            mainFormListView.Columns.Add("Date");
-            mainFormListView.Columns.Add("Size");
-
-            // Show default view - put in a list for now
-            mainFormListView.View = View.Details;
-
+                // Show default view
+                mainFormListView.View = View.Details;
+            //});
+            
         }
 
         private void mainFormListView_SelectedIndexChanged(object sender, EventArgs e)
@@ -51,12 +118,6 @@ namespace PhotoEditor
             byte[] bytes = File.ReadAllBytes(filename);
             MemoryStream ms = new MemoryStream(bytes);
             return Image.FromStream(ms);
-        }
-
-        //Will need to change the view if we choose a different directory
-        public void RefreshTree()
-        {
-            //TreeView.Nodes.Clear();
         }
 
         //Menu Strip: File
@@ -76,13 +137,19 @@ namespace PhotoEditor
             {
                 photoRootDirectory = folderBrowserDialog.SelectedPath;
                 //Insert helper function for directory change
-
+                UpdateDirectory(photoRootDirectory);
+                //Acting like a "refresh" function - will just repopulate the tree view
+                PopulateImageList();
             }
         }
 
         private void locateOnDiskToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //Need to make sure the user actually clicks on a picture first
+            if (mainFormListView.SelectedItems != null)
+            {
 
+            }
         }
 
         // Menu strip: About 
