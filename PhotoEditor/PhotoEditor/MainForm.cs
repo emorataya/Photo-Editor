@@ -128,6 +128,8 @@ namespace PhotoEditor
                     listViewItem.SubItems.Add(tempFileSize);
                     listViewItem.Tag = file;
 
+                    ListViewItem temp = listViewItem;
+
                     Invoke((Action)(() =>
                     {
                         mainFormListView.Items.Add(listViewItem);
@@ -184,7 +186,7 @@ namespace PhotoEditor
                 //Insert helper function for directory change
                 UpdateDirectory(directory);
                 //Acting like a "refresh" function - will just repopulate the image list view
-                PopulateImageList();
+                //PopulateImageList();
                 PopulateTreeView();
             }
         }
