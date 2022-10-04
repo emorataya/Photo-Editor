@@ -15,15 +15,13 @@ namespace PhotoEditor
 
         public MainForm()
         {
-            InitializeComponent();
-
             //Get folder path
             directory = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
-
             photoRootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+            cancellationTokenSource = new CancellationTokenSource();
+            var token = cancellationTokenSource.Token;
 
-            //ListView
-            PopulateImageList();
+            InitializeComponent();
 
             //TreeView
             PopulateTreeView();
@@ -32,6 +30,8 @@ namespace PhotoEditor
             mainFormListView.Columns.Add("Name", 300, HorizontalAlignment.Left);
             mainFormListView.Columns.Add("Date", -2, HorizontalAlignment.Left);
             mainFormListView.Columns.Add("Size", -2, HorizontalAlignment.Left);
+            // Show default view
+            mainFormListView.View = View.Details;
             mainFormListView.FullRowSelect = true;
         }
 
@@ -72,16 +72,15 @@ namespace PhotoEditor
         }
 
         //Populate Image List() - LIST VIEW
-        private /*async Task*/ void PopulateImageList()
+        private async void PopulateImageList()
         {
-            cancellationTokenSource = new CancellationTokenSource();
-            var token = cancellationTokenSource.Token;
+            progressBar1.Visible = true;
 
             mainFormListView.Items.Clear();
 
             //Thread
-            //await Task.Run(() =>
-            //{
+            await Task.Run(() =>
+            {
                 //Images - Small
                 ImageList smallImageList = new ImageList();
                 smallImageList.ImageSize = new Size(64, 64);
@@ -91,23 +90,28 @@ namespace PhotoEditor
                 largeImageList.ImageSize = new Size(128, 128);
 
                 //Invoke - used for progress bar
-                mainFormListView.SmallImageList = smallImageList;
-                mainFormListView.LargeImageList = largeImageList;              
+                Invoke((Action)(() =>
+                {
+                    mainFormListView.SmallImageList = smallImageList;
+                    mainFormListView.LargeImageList = largeImageList;
+                }));
+
+                var num = 10;
 
                 foreach (FileInfo file in directory.GetFiles("*.jpg"))
                 {
-                    //Need to make sure to stop the thread if the cancellation has been requested
-                    if (token.IsCancellationRequested)
+                    //Thread
+                    Invoke((Action)(() =>
                     {
-                        return;
-                    }
+                        byte[] bytes = System.IO.File.ReadAllBytes(file.FullName);
+                        Image image = Image.FromStream(new MemoryStream(bytes));
 
-                //Thread
-                    byte[] bytes = System.IO.File.ReadAllBytes(file.FullName);
-                    Image image = Image.FromStream(new MemoryStream(bytes));
+                        smallImageList.Images.Add(file.FullName, image);
+                        largeImageList.Images.Add(file.FullName, image);
 
-                    smallImageList.Images.Add(file.FullName, image);
-                    largeImageList.Images.Add(file.FullName, image);
+                        progressBar1.Value = num++;
+                    }));
+                    
 
                     //Subitems using temp listViewItem variable
                     ListViewItem listViewItem = new ListViewItem
@@ -124,14 +128,15 @@ namespace PhotoEditor
                     listViewItem.SubItems.Add(tempFileSize);
                     listViewItem.Tag = file;
 
-                    mainFormListView.Items.Add(listViewItem);
-
+                    Invoke((Action)(() =>
+                    {
+                        mainFormListView.Items.Add(listViewItem);
+                    }));
                 }
+            });
 
-                // Show default view
-                mainFormListView.View = View.Details;
-            //});
-            
+            progressBar1.Visible = false;
+
         }
 
         private string FileSize(FileInfo file)
@@ -191,8 +196,6 @@ namespace PhotoEditor
             if (mainFormListView.SelectedItems.Count == 1)
             {
                 string fileTemp = mainFormListView.SelectedItems[0].ImageKey;
-
-                ProcessStartInfo processStartInfo = new ProcessStartInfo(fileTemp);
                 Process.Start("explorer.exe", @"/select," + fileTemp);
 
             }
@@ -253,6 +256,14 @@ namespace PhotoEditor
             editPhotoForm.ShowDialog();
         }
 
-
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            TreeNode treeNode = treeView1.SelectedNode;
+            if (treeNode != null)
+            {
+                treeNode.Expand();
+                UpdateDirectory((DirectoryInfo)treeNode.Tag);
+            }
+        }
     }
 }
