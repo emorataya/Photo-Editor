@@ -42,11 +42,11 @@ namespace PhotoEditor
             this.Enabled = true;
             this.BringToFront();
 
-            saveButton.Enabled = true;
             transformingForm.Close();
 
             if (!isCancelled)
             {
+                saveButton.Enabled = true;
                 photoPictureBox.Image = transformedBitmap;
             }
         }
@@ -119,11 +119,11 @@ namespace PhotoEditor
                 this.Enabled = true;
                 this.BringToFront();
 
-                saveButton.Enabled = true;
                 transformingForm.Close();
 
                 if (!isCancelled)
                 {
+                    saveButton.Enabled = true;
                     photoPictureBox.Image = transformedBitmap;
                 }
             }
@@ -196,11 +196,11 @@ namespace PhotoEditor
             this.Enabled = true;
             this.BringToFront();
 
-            saveButton.Enabled = true;
             transformingForm.Close();
 
             if (!isCancelled)
             {
+                saveButton.Enabled = true;
                 photoPictureBox.Image = transformedBitmap;
             }
         }
