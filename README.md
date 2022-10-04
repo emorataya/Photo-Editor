@@ -10,6 +10,14 @@ Along with the user being able to browse, the user can also apply various transf
 
 # Contributions of each teammate:
 Sydney Honyouti:
+1. Main Form: View images
+2. Main Form: Threading
+3. Main Form: Locate on Disk (Referenced https://social.msdn.microsoft.com/Forums/expression/en-US/0ea2edea-9a98-4c7a-8d7c-cf2ee56f4a79/open-folder-and-select-the-file?forum=winforms)
+4. Main Form: Select Root Folder
+5. Main Form: Change View
+6. Main Form: About Dialog
+
+Extra Credit: Splitter View (Resource: https://www.youtube.com/watch?v=W76sHhJkEvk)
 
 Edwin Morataya:
 1. Edit window to transform the image (code to transform images, etc.).
